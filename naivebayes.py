@@ -6,18 +6,17 @@
 import sys
 import os
 import re
-import operator
+import math
 
 from processDocument import *
 
 #----------------------------------------------------------------------------------------------------------------------------------------
 def trainNaiveBayes(filenames, path):
-	class_probabilities = {}
 	class_probabilities = determineClassProbs(filenames)
 
-	word_probabilities = {}
-	vocab_size = 0
-	return class_probabilities, word_probabilities, vocab_size
+	word_probabilities = determineWordProbs(filenames, path)
+
+	return class_probabilities, word_probabilities
 
 def testNaiveBayes(filename):
 	predicition = ''
@@ -78,6 +77,50 @@ def determineVocab(filenames, path):
 					text[my_class][t] += 1
 
 	return text, vocab
+
+
+def determineNumberofWords(words):
+	# Determines the number of words in a text
+	count = 0
+
+	for w in words.keys():
+		count += words[w]
+
+	return count
+
+def calculateProb(occurrences, words, vocab_size):
+	# Determines the probability of an individual word in the text of the given category
+	# Use the log of the probability to prevent floating-point underflow
+	probability = 0
+
+	numerator = occurrences + 1
+	denominator = words + vocab_size
+
+	probability = float(numerator)/float(denominator)
+
+	probability = math.log10(probability)
+
+	return probability
+
+def determineWordProbs(filenames, path):
+	# Determines the probability of each word in the vocabulary for each category
+	word_probs = {}
+	text, vocab = determineVocab(filenames,path)
+
+	vocab_size = len(vocab)
+
+	for c in text.keys():
+		word_probs[c] = {}
+		number_words = determineNumberofWords(text[c])
+		print (c, number_words)
+
+		for word in vocab:
+			if word in text[c].keys():
+				word_probs[c][word] = calculateProb(text[c][word], number_words, vocab_size)
+			else:
+				word_probs[c][word] = calculateProb(0, number_words, vocab_size)
+
+	return word_probs
 
 #----------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------

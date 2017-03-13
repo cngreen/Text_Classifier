@@ -6,7 +6,7 @@
 import sys
 import os
 import re
-import operator
+import math
 
 from processDocument import *
 
@@ -66,6 +66,7 @@ def determineVocab(filenames, path):
 	return text, vocab
 
 def determineNumberofWords(words):
+	# Determines the number of words in a text
 	count = 0
 
 	for w in words.keys():
@@ -74,6 +75,8 @@ def determineNumberofWords(words):
 	return count
 
 def calculateProb(occurrences, words, vocab_size):
+	# Determines the probability of an individual word in the text of the given category
+	# Use the log of the probability to prevent floating-point underflow
 	probability = 0
 
 	numerator = occurrences + 1
@@ -81,9 +84,12 @@ def calculateProb(occurrences, words, vocab_size):
 
 	probability = float(numerator)/float(denominator)
 
+	probability = math.log10(probability)
+
 	return probability
 
 def determineWordProbs(filenames, path):
+	# Determines the probability of each word in the vocabulary for each category
 	word_probs = {}
 	text, vocab = determineVocab(filenames,path)
 
@@ -96,10 +102,11 @@ def determineWordProbs(filenames, path):
 
 		for word in vocab:
 			if word in text[c].keys():
-				print calculateProb(text[c][word], number_words, vocab_size)
+				word_probs[c][word] = calculateProb(text[c][word], number_words, vocab_size)
 			else:
-				print calculateProb(0, number_words, vocab_size)
+				word_probs[c][word] = calculateProb(0, number_words, vocab_size)
 
+	return word_probs
 
 def identifyAcronymsAbbrev2(input):
 	#finds formatted numbers
@@ -141,7 +148,7 @@ def main():
 
 
 
-	determineWordProbs(filenames, path)
+	print determineWordProbs(filenames, path)
 
 
 
