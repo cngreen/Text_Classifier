@@ -7,6 +7,7 @@ import sys
 import os
 import re
 import math
+import operator
 
 from processDocument import *
 
@@ -19,8 +20,6 @@ def trainNaiveBayes(filenames, path):
 	return class_probabilities, word_probabilities
 
 def testNaiveBayes(filename, path, word_probabilities, class_probabilities):
-	predicition = ''
-
 	category_probability = {}
 
 	for c in class_probabilities.keys():
@@ -40,7 +39,14 @@ def testNaiveBayes(filename, path, word_probabilities, class_probabilities):
 				if term in word_probabilities[c].keys():
 					category_probability[c] += word_probabilities[c][term]
 
-	return category_probability
+	for c in category_probability.keys():
+		category_probability[c] = category_probability[c] * class_probabilities[c]
+
+	print category_probability
+
+	# returns the category with the highest probability
+	return max(category_probability.iteritems(), key=operator.itemgetter(1))[0]
+
 
 def identifyFileType(filename):
 	# identifies the categories from the filenames
