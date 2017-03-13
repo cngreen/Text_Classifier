@@ -33,7 +33,10 @@ def determineClassProbs(filenames):
 
 	return class_probabilities
 
-def determineTexts(filenames, path):
+def determineVocab(filenames, path):
+	# determines the vocabulary ['a' 'b' 'c']
+	# and the Text_j for each Category c_j
+	# text[category] = ['a': 1 ' b': 3 'c': 4] (number of occurrences of a term)
 	text = {}
 	vocab = []
 
@@ -61,6 +64,41 @@ def determineTexts(filenames, path):
 					text[my_class][t] += 1
 
 	return text, vocab
+
+def determineNumberofWords(words):
+	count = 0
+
+	for w in words.keys():
+		count += words[w]
+
+	return count
+
+def calculateProb(occurrences, words, vocab_size):
+	probability = 0
+
+	numerator = occurrences + 1
+	denominator = words + vocab_size
+
+	probability = float(numerator)/float(denominator)
+
+	return probability
+
+def determineWordProbs(filenames, path):
+	word_probs = {}
+	text, vocab = determineVocab(filenames,path)
+
+	vocab_size = len(vocab)
+
+	for c in text.keys():
+		word_probs[c] = {}
+		number_words = determineNumberofWords(text[c])
+		print (c, number_words)
+
+		for word in vocab:
+			if word in text[c].keys():
+				print calculateProb(text[c][word], number_words, vocab_size)
+			else:
+				print calculateProb(0, number_words, vocab_size)
 
 
 def identifyAcronymsAbbrev2(input):
@@ -100,19 +138,10 @@ def main():
 		#for line in lines:
 			#print line
 
-	filenames = filenames[1:]
 
-	classprobs = determineClassProbs(filenames)
 
-	texts, vocab = determineTexts(filenames, path)
 
-	print texts
-	print texts.keys()
-	print vocab
-	print len(vocab)
-
-	print vocab[0]
-	print texts['lie'][vocab[0]]
+	determineWordProbs(filenames, path)
 
 
 
