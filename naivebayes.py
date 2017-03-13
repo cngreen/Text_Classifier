@@ -18,9 +18,29 @@ def trainNaiveBayes(filenames, path):
 
 	return class_probabilities, word_probabilities
 
-def testNaiveBayes(filename):
+def testNaiveBayes(filename, path, word_probabilities, class_probabilities):
 	predicition = ''
-	return predicition
+
+	category_probability = {}
+
+	for c in class_probabilities.keys():
+		category_probability[c] = 0
+
+	path2file = os.path.join(path, filename)
+	lines = [line.rstrip('\n') for line in open(path2file)] #get all the text lines from the file
+
+	for line in lines:
+		line.strip()
+		if line != '':
+			temp = []
+			temp = tokenizeText(line)
+
+		for term in temp:
+			for c in word_probabilities.keys():
+				if term in word_probabilities[c].keys():
+					category_probability[c] += word_probabilities[c][term]
+
+	return category_probability
 
 def identifyFileType(filename):
 	# identifies the categories from the filenames
@@ -112,7 +132,6 @@ def determineWordProbs(filenames, path):
 	for c in text.keys():
 		word_probs[c] = {}
 		number_words = determineNumberofWords(text[c])
-		print (c, number_words)
 
 		for word in vocab:
 			if word in text[c].keys():
@@ -137,14 +156,14 @@ def main():
 	for filename in os.listdir(path): #for all files in specified folder
 		filenames.append(filename)
 
-		path2file = os.path.join(path, filename)
-		lines = [line.rstrip('\n') for line in open(path2file)] #get all the text lines from the file
+	#print(filenames)
 
-		#for each line in the file
-		#for line in lines:
-			#print line
+	class_probabilities, word_probabilities = trainNaiveBayes(filenames, path)
 
-	print(filenames)
+	prediction = testNaiveBayes('true90.txt', path, word_probabilities, class_probabilities)
+
+	print (prediction)
+
 
 	targetFile = open('naivebayes.output', 'w+')
 
