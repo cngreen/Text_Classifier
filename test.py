@@ -35,11 +35,12 @@ def determineClassProbs(filenames):
 
 def determineTexts(filenames, path):
 	text = {}
+	vocab = []
 
 	for filename in filenames:
 		my_class = identifyFileType(filename)
 		if my_class not in text.keys():
-			text[my_class] = []
+			text[my_class] = {}
 
 		path2file = os.path.join(path, filename)
 		lines = [line.rstrip('\n') for line in open(path2file)] #get all the text lines from the file
@@ -50,13 +51,16 @@ def determineTexts(filenames, path):
 				temp = []
 				temp = tokenizeText(line)
 
-			text[my_class].extend(temp)
+			for t in temp:
+				if t not in vocab:
+					vocab.append(t)
 
-	vocab_size = 0
-	for c in text.keys():
-		vocab_size += len(text[c])
+				if t not in text[my_class].keys():
+					text[my_class][t] = 1
+				else:
+					text[my_class][t] += 1
 
-	return text, vocab_size
+	return text, vocab
 
 
 def identifyAcronymsAbbrev2(input):
@@ -100,14 +104,16 @@ def main():
 
 	classprobs = determineClassProbs(filenames)
 
-	texts, size = determineTexts(filenames, path)
+	texts, vocab = determineTexts(filenames, path)
 
+	print texts
 	print texts.keys()
+	print vocab
+	print len(vocab)
 
-	print len(texts['lie'])
-	print len(texts['true'])
+	print vocab[0]
+	print texts['lie'][vocab[0]]
 
-	print size
 
 
 	targetFile = open('naivebayes.output', 'w+')
