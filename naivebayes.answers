@@ -15,3 +15,27 @@ words:
 top 10 words that have the highest conditional probability (i.e., P(w|c)) in each of the two classes
 considered (truth, lie). Under each class, list the words in reversed order of their conditional
 probability (i.e., descending order).
+
+lie:
+('always', -1.810247796873585)
+('we', -1.85164048203181)
+('not', -1.935186533481885)
+('person', -1.935186533481885)
+('about', -1.9988556133512623)
+('friend', -2.01436777952951)
+('has', -2.06453438899524)
+('very', -2.082632611088036)
+('never', -2.10151795524841)
+('best', -2.141946612304018)
+
+true
+('we', -1.410901228947475)
+('best', -1.8001471541950163)
+('friend', -1.80804363504105)
+('not', -1.9369851141030239)
+('always', -1.9762384132506974)
+('other', -2.006621042244418)
+('each', -2.0601402979709067)
+('can', -2.0601402979709067)
+('very', -2.0820421394187365)
+('friends', -2.0895952773091824)

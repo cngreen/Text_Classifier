@@ -170,6 +170,13 @@ def main():
 		filenames.append(filename)
 		num_files += 1
 
+	class_probabilities, word_probabilities = trainNaiveBayes(filenames, path)
+	for c in word_probabilities.keys():
+		print c
+		topwords = sorted(word_probabilities[c].iteritems(), key=operator.itemgetter(1), reverse=True)[:10]
+		for w in topwords:
+			print w
+
 	for f in filenames:
 		print f #used to see progress of the running function
 		test = f
