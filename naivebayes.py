@@ -14,13 +14,12 @@ from processDocument import *
 #----------------------------------------------------------------------------------------------------------------------------------------
 def trainNaiveBayes(filenames, path):
 	class_probabilities = determineClassProbs(filenames)
-
 	word_probabilities = determineWordProbs(filenames, path)
 
 	return class_probabilities, word_probabilities
 
 def testNaiveBayes(filename, path, word_probabilities, class_probabilities):
-	category_probability = {}
+	category_probability = {} # the word probabilites for each category
 
 	for c in class_probabilities.keys():
 		category_probability[c] = 0
@@ -34,15 +33,14 @@ def testNaiveBayes(filename, path, word_probabilities, class_probabilities):
 			temp = []
 			temp = tokenizeText(line)
 
-		for term in temp:
+		for term in temp: # for each word determine the word probability for each category
 			for c in word_probabilities.keys():
 				if term in word_probabilities[c].keys():
 					category_probability[c] += word_probabilities[c][term]
 
-	for c in category_probability.keys():
+	for c in category_probability.keys(): 
+	# for each class, multiply the sum of the log of the word probabilities by the class probability
 		category_probability[c] = category_probability[c] * class_probabilities[c]
-
-	print category_probability
 
 	# returns the category with the highest probability
 	return max(category_probability.iteritems(), key=operator.itemgetter(1))[0]
@@ -153,6 +151,9 @@ def main():
 
 	output = ''
 	filenames = []
+	num_correct = 0
+	num_files = 0
+
 	#print 'Argument List:', str(sys.argv)
 	try: 
 		foldername = str(sys.argv[1])
@@ -163,12 +164,14 @@ def main():
 
 	for filename in os.listdir(path): #for all files in specified folder
 		filenames.append(filename)
-
-	#print(filenames)
+		num_files += 1
 
 	for f in filenames:
+		print f
 		test = f
-		filenames.remove(test)
+
+		train = list(filenames)
+		train.remove(f)
 
 		class_probabilities, word_probabilities = trainNaiveBayes(filenames, path)
 
@@ -176,12 +179,15 @@ def main():
 
 		output += test + ' ' + prediction + '\n'
 
-		filenames.append(test)
+		if prediction == identifyFileType(test):
+			num_correct += 1
 
+
+	print num_correct
+	print num_files
+	print float(num_correct)/float(num_files)
 
 	targetFile = open('naivebayes.output', 'w+')
-
-	output =  ''
 	targetFile.write(output)
 
 
