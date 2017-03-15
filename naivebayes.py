@@ -14,6 +14,7 @@ from processDocument import *
 #----------------------------------------------------------------------------------------------------------------------------------------
 def trainNaiveBayes(filenames, path):
 	class_probabilities = determineClassProbs(filenames)
+	print class_probabilities
 	word_probabilities = determineWordProbs(filenames, path)
 
 	return class_probabilities, word_probabilities
@@ -171,9 +172,9 @@ def main():
 		test = f
 
 		train = list(filenames)
-		train.remove(f)
+		train.remove(f) # leave one out
 
-		class_probabilities, word_probabilities = trainNaiveBayes(filenames, path)
+		class_probabilities, word_probabilities = trainNaiveBayes(train, path)
 
 		prediction = testNaiveBayes(test, path, word_probabilities, class_probabilities)
 
