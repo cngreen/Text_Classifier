@@ -14,7 +14,6 @@ from processDocument import *
 #----------------------------------------------------------------------------------------------------------------------------------------
 def trainNaiveBayes(filenames, path):
 	class_probabilities = determineClassProbs(filenames)
-	print class_probabilities
 	word_probabilities = determineWordProbs(filenames, path)
 
 	return class_probabilities, word_probabilities
@@ -33,6 +32,8 @@ def testNaiveBayes(filename, path, word_probabilities, class_probabilities):
 		if line != '':
 			temp = []
 			temp = tokenizeText(line)
+			temp = removeStopwords(temp)
+			temp = stemWords(temp)
 
 		for term in temp: # for each word determine the word probability for each category
 			for c in word_probabilities.keys():
@@ -91,6 +92,8 @@ def determineVocab(filenames, path):
 			if line != '':
 				temp = []
 				temp = tokenizeText(line)
+				temp = removeStopwords(temp)
+				temp = stemWords(temp)
 
 			for t in temp:
 				if t not in vocab:
@@ -168,7 +171,7 @@ def main():
 		num_files += 1
 
 	for f in filenames:
-		print f
+		print f #used to see progress of the running function
 		test = f
 
 		train = list(filenames)
@@ -184,9 +187,7 @@ def main():
 			num_correct += 1
 
 
-	print num_correct
-	print num_files
-	print float(num_correct)/float(num_files)
+	print "accuracy: ", float(num_correct)/float(num_files)
 
 	targetFile = open('naivebayes.output', 'w+')
 	targetFile.write(output)
