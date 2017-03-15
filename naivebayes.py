@@ -33,7 +33,7 @@ def testNaiveBayes(filename, path, word_probabilities, class_probabilities):
 			temp = []
 			temp = tokenizeText(line)
 			temp = removeStopwords(temp)
-			temp = stemWords(temp)
+			#temp = stemWords(temp)
 
 		for term in temp: # for each word determine the word probability for each category
 			for c in word_probabilities.keys():
@@ -93,7 +93,7 @@ def determineVocab(filenames, path):
 				temp = []
 				temp = tokenizeText(line)
 				temp = removeStopwords(temp)
-				temp = stemWords(temp)
+				#temp = stemWords(temp)
 
 			for t in temp:
 				if t not in vocab:

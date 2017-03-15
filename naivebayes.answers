@@ -5,12 +5,12 @@
 1. accuracy of your Naive Bayes classifier, as described above: 
 	0.862244897959
 2. accuracy of your Naive Bayes classifier, when you also remove the stopwords:
-	0.
+	0.780612244898
 3. accuracy of your Naive Bayes classifier, when you also stem the words:
-	0.
+	0.877551020408
 4. accuracy of your Naive Bayes classifier, when you also remove the stopwords and stem the
 words:
-	0.
+	0.821428571429
 5. Using the implementation that does not remove stopwords and does not stem words, list the
 top 10 words that have the highest conditional probability (i.e., P(w|c)) in each of the two classes
 considered (truth, lie). Under each class, list the words in reversed order of their conditional
