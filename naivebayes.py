@@ -150,6 +150,8 @@ def determineWordProbs(filenames, path):
 #----------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------
 def main():
+
+	output = ''
 	filenames = []
 	#print 'Argument List:', str(sys.argv)
 	try: 
@@ -164,11 +166,17 @@ def main():
 
 	#print(filenames)
 
-	class_probabilities, word_probabilities = trainNaiveBayes(filenames, path)
+	for f in filenames:
+		test = f
+		filenames.remove(test)
 
-	prediction = testNaiveBayes('true90.txt', path, word_probabilities, class_probabilities)
+		class_probabilities, word_probabilities = trainNaiveBayes(filenames, path)
 
-	print (prediction)
+		prediction = testNaiveBayes(test, path, word_probabilities, class_probabilities)
+
+		output += test + ' ' + prediction + '\n'
+
+		filenames.append(test)
 
 
 	targetFile = open('naivebayes.output', 'w+')
