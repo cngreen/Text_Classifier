@@ -32,8 +32,8 @@ def testNaiveBayes(filename, path, word_probabilities, class_probabilities):
 		if line != '':
 			temp = []
 			temp = tokenizeText(line)
-			temp = removeStopwords(temp)
-			#temp = stemWords(temp)
+			# temp = removeStopwords(temp) #used for naivebayes.answers
+			# temp = stemWords(temp) #used for naivebayes.answers
 
 		for term in temp: # for each word determine the word probability for each category
 			for c in word_probabilities.keys():
@@ -92,8 +92,8 @@ def determineVocab(filenames, path):
 			if line != '':
 				temp = []
 				temp = tokenizeText(line)
-				temp = removeStopwords(temp)
-				#temp = stemWords(temp)
+				# temp = removeStopwords(temp) #used for naivebayes.answers
+				# temp = stemWords(temp) #used for naivebayes.answers
 
 			for t in temp:
 				if t not in vocab:
@@ -170,15 +170,8 @@ def main():
 		filenames.append(filename)
 		num_files += 1
 
-	class_probabilities, word_probabilities = trainNaiveBayes(filenames, path)
-	for c in word_probabilities.keys():
-		print c
-		topwords = sorted(word_probabilities[c].iteritems(), key=operator.itemgetter(1), reverse=True)[:10]
-		for w in topwords:
-			print w
-
 	for f in filenames:
-		print f #used to see progress of the running function
+		# print f # used to see progress of the running function
 		test = f
 
 		train = list(filenames)
@@ -190,14 +183,22 @@ def main():
 
 		output += test + ' ' + prediction + '\n'
 
-		if prediction == identifyFileType(test):
+		if prediction == identifyFileType(test): # if the prediction matches the file type
 			num_correct += 1
-
 
 	print "accuracy: ", float(num_correct)/float(num_files)
 
 	targetFile = open('naivebayes.output', 'w+')
 	targetFile.write(output)
+
+
+	# determines the top 10 words that have the highest conditional probability in each category
+	# class_probabilities, word_probabilities = trainNaiveBayes(filenames, path)
+	# for c in word_probabilities.keys():
+	# 	print c
+	# 	topwords = sorted(word_probabilities[c].iteritems(), key=operator.itemgetter(1), reverse=True)[:10]
+	# 	for w in topwords:
+	# 		print w
 
 
 if __name__ == "__main__": 
